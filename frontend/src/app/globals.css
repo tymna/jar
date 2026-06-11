@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  /* Jar's accent — see DESIGN.md. */
+  --color-cherry: #de006f;
+  /* Everyday font; --font-space-mono comes from next/font in layout.tsx. */
+  --font-mono: var(--font-space-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  /* Mono is the app's default voice — see DESIGN.md. */
+  body {
+    font-family: var(--font-mono);
+  }
+
+  /* Tailwind v4 preflight resets buttons to cursor: default; undo that. */
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}

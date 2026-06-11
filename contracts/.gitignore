@@ -1,0 +1,10 @@
+# Compiler files
+cache/
+out/
+
+# Broadcast logs — keep real deployments, drop local anvil + dry runs
+broadcast/*/31337/
+broadcast/**/dry-run/
+
+# forge doc output
+docs/

@@ -1,0 +1,12 @@
+{
+  "name": "jar",
+  "private": true,
+  "packageManager": "pnpm@11.5.2",
+  "scripts": {
+    "dev:frontend": "pnpm --filter @jar/frontend dev",
+    "dev:indexer": "pnpm --filter @jar/indexer dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
+  }
+}
