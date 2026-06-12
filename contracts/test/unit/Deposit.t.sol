@@ -52,18 +52,22 @@ contract DepositTest is Base {
         assertEq(jar.getCurrentBalance(), DEPOSIT_AMOUNT);
     }
 
-    /// @dev Status is purely visual: a CLOSED jar still accepts deposits.
-    function test_deposit_worksAfterClose() public {
+    // ---- REVERT CONDITIONS ---- //
+    /// @dev A CLOSED jar is done — deposit() rejects so funds can't land in
+    ///      a jar the owner considers finished. (Direct ERC20 transfers are
+    ///      unpreventable; withdrawAll stays callable to sweep those.)
+    function test_revertIf_depositAfterClose() public {
         vm.prank(owner);
         jar.withdrawAll();
         assertEq(uint256(jar.getJarStatus()), uint256(Jar.JarStatus.CLOSED));
 
-        _deposit(alice, DEPOSIT_AMOUNT);
-
-        assertEq(jar.getCurrentBalance(), DEPOSIT_AMOUNT);
+        vm.startPrank(alice);
+        token.approve(address(jar), DEPOSIT_AMOUNT);
+        vm.expectRevert(Jar.JarIsClosed.selector);
+        jar.deposit(DEPOSIT_AMOUNT);
+        vm.stopPrank();
     }
 
-    // ---- REVERT CONDITIONS ---- //
     function test_revertIf_depositZero() public {
         vm.prank(alice);
         vm.expectRevert(Jar.AmountMustBeGreaterThanZero.selector);

@@ -6,22 +6,29 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Jar} from "./Jar.sol";
 
 contract JarFactory is Ownable {
+    // ---- ERRORS ---- //
     error TokenIsNotAllowed();
 
+    // ---- TYPES ---- //
     mapping(address token => bool allowed) private s_allowedToken;
 
-    constructor(address admin) Ownable(admin) {}
-
+    // ---- EVENTS ---- //
     event JarCreated(address indexed jar, address indexed owner, string name, address token, uint256 goalAmount);
     event AllowedTokenAdded(address indexed token);
     event AllowedTokenRemoved(address indexed token);
 
+    // ---- CONSTRUCTOR ---- //
+    constructor(address admin) Ownable(admin) {}
+
+    // ---- FUNCTIONS ---- //
+    // admind
     function addAllowedToken(address token) external onlyOwner {
         s_allowedToken[token] = true;
 
         emit AllowedTokenAdded(token);
     }
 
+    // admind
     function removeAllowedToken(address token) external onlyOwner {
         s_allowedToken[token] = false;
 
@@ -40,6 +47,7 @@ contract JarFactory is Ownable {
         return address(jar);
     }
 
+    // ---- GETTERS ---- //
     function isAllowedToken(address token) external view returns (bool) {
         return s_allowedToken[token];
     }

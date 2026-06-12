@@ -12,8 +12,9 @@ contract Jar is Ownable {
     // ---- ERRORS ---- //
     error AmountMustBeGreaterThanZero();
     error TokenAddressCannotBeZero();
+    error JarIsClosed();
 
-    // ---- ENUMS ---- //
+    // ---- ENUMM ---- //
     enum JarStatus {
         ACTIVE,
         CLOSED
@@ -22,12 +23,13 @@ contract Jar is Ownable {
     // ---- STATE VARAIBLES ---- //
     JarStatus private s_status;
     string private s_name;
-    // just visual target, does not lock any operations
-    uint256 private s_goalAmount;
+
+    uint256 private s_goalAmount; // just visual target, does not lock any operations
     address private immutable i_tokenToSave;
 
+    // ---- EVENTS ---- //
     event Deposit(address indexed from, uint256 amount);
-    event Withdraw(address indexed to, uint256 amount);
+    event WithdrawAll(address indexed to, uint256 amount);
     event GoalAmountChanged(uint256 oldGoal, uint256 newGoal);
 
     // ---- CONSTRUCTOR ---- //
@@ -51,25 +53,33 @@ contract Jar is Ownable {
             revert AmountMustBeGreaterThanZero();
         }
 
+        if (s_status == JarStatus.CLOSED) {
+            revert JarIsClosed();
+        }
+
         IERC20(i_tokenToSave).safeTransferFrom(msg.sender, address(this), amount);
 
         emit Deposit(msg.sender, amount);
     }
 
     function withdrawAll() external onlyOwner returns (uint256 amountToWithdraw) {
-        s_status = JarStatus.CLOSED;
-
         address tokenToSave = i_tokenToSave;
+
+        s_status = JarStatus.CLOSED;
 
         amountToWithdraw = IERC20(tokenToSave).balanceOf(address(this));
         IERC20(tokenToSave).safeTransfer(msg.sender, amountToWithdraw);
 
-        emit Withdraw(msg.sender, amountToWithdraw);
+        emit WithdrawAll(msg.sender, amountToWithdraw);
     }
 
     function changeGoal(uint256 amount) external onlyOwner {
         if (amount == 0) {
             revert AmountMustBeGreaterThanZero();
+        }
+
+        if (s_status == JarStatus.CLOSED) {
+            revert JarIsClosed();
         }
 
         uint256 oldGoal = s_goalAmount;

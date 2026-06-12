@@ -1,0 +1,57 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor",
+  "elements": [
+    {
+      "id": "b7xf_r7RnRiTL2Hj5SClE",
+      "type": "image",
+      "x": 130.103271484375,
+      "y": 190.63497924804688,
+      "width": 182.00000000000003,
+      "height": 164,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a1",
+      "roundness": null,
+      "seed": 708392879,
+      "version": 11,
+      "versionNonce": 1300904175,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1781156640681,
+      "link": null,
+      "locked": false,
+      "status": "pending",
+      "fileId": "e4e47f218267c49007dbab01315e749c877c8ca7",
+      "scale": [
+        1,
+        1
+      ],
+      "crop": null
+    }
+  ],
+  "appState": {
+    "gridSize": 20,
+    "gridStep": 5,
+    "gridModeEnabled": false,
+    "viewBackgroundColor": "#fffce8"
+  },
+  "files": {
+    "e4e47f218267c49007dbab01315e749c877c8ca7": {
+      "mimeType": "image/png",
+      "id": "e4e47f218267c49007dbab01315e749c877c8ca7",
+      "dataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALYAAACkCAYAAAA67tSUAAAExklEQVR4AezSW24aURBFUeQRZ8YZSoKE8oEEari5j3qsyLFl011VZ5/98/v264//GFRz4OfmHwIFCRC7YKki3W7EZkFJAsQuWatQxE7vgACvCBD7FRV/S0+A2OkrFOAVAWK/ouJv6QkQO32FArwiQOxXVPwtPYFUYqenLcA2AsTehtqinQSIvZO2XdsIEHsbaot2EiD2Ttp2bSNA7G2oLbrdbtsgEHsbaot2EiD2Ttp2bSNA7G2oLdpJgNg7adu1jQCxt6G2aCcBYq+ibe5RAsQ+it/yVQSIvYqsuUcJEPsofstXESD2KrLmHiVA7KP4LV9FYIbYq24zF4FhAsQeRufFyASIHbkdtw0TIPYwOi9GJkDsyO24bZgAsYfRVXqxXhZi1+tUojsBYt8h+KpHgNj1OpXoToDYdwi+6hEgdr1OJboTaCf2PbOvBgSI3aDkjhGJ3bH1BpmJ3aDkjhGJ3bH1BpmJ3aDkYhE/ikPsjzB5KBsBYmdrzL0fESD2R5g8lI0AsbM15t6PCBD7I0weykaA2JEbc9swAWIPo/NiZALEjtyO24YJEHsYnRcjEyB25HbcNkyA2MPovBiZQBSxIzNyW0ICxE5YmpOvCRD7mpEnEhIgdsLSnHxNgNjXjDyRkACxE5YW8+RYVxE7Vh+umUSA2JNAGhOLALFj9eGaSQSIPQmkMbEIEDtWH66ZRIDYAyC9Ep8AseN35MIBAsQegOaV+ASIHb8jFw4QIPYANK/EJ0Ds+B25cIDAhdgDE72CQAACxA5QghPmEyD2fKYmBiBA7AAlOGE+AWLPZ2piAALEDlDC0hOaDid20+KrxyZ29Yab5iN20+KrxyZ29Yab5iN20+Krx64kdvWu5PuCALG/gOXRPASInacrl35BgNhfwPJoHgLEztOVS78gQOwvYHl0NYF584k9j6VJgQgQO1AZTplHgNjzWJoUiACxA5XhlHkEiD2PpUmBCBD7UBnWriVA7LV8TT9EgNiHwFu7lgCx1/I1/RABYh8Cb+1aAsRey9f0QwQ2iH0ombWtCRC7df11wxO7bretkxG7df11wxO7bretkxG7df0fhk/4GLETlubkawLEvmbkiYQEiJ2wNCdfEyD2NSNPJCRA7ISlOfmaALGfGfmtCAFiFylSjGcCxH7m4bciBIhdpEgxngkQ+5mH34oQIHaRIsX4R+Dxk9gPDr4XI0DsYoWK8yBA7AcH34sRIHaxQsV5ECD2g4PvxQgQO3GhTn9PgNjv2fgkMQFiJy7P6e8JEPs9G58kJkDsxOU5/T0BYr9n45PEBJKInZiw048QIPYR7JauJkDs1YTNP0KA2EewW7qaALFXEzb/CAFiH8HecOnmyMTeDNy6PQSIvYezLZsJEHszcOv2ECD2Hs62bCZA7M3ArdtDgNjzOZsYgACxA5TghPkEiD2fqYkBCBA7QAlOmE+A2POZmhiAALEDlOCE+QT+T+z595iIwBQCxJ6C0ZBoBIgdrRH3TCFA7CkYDYlGgNjRGnHPFALEnoIx75CqlxO7arPNcxG7uQBV4xO7arPNcxG7uQBV4xO7arPNczUSu3nTzeITu1nhXeISu0vTzXISu1nhXeISu0vTzXISu1nhqeN+cTyxv4Dl0TwE/gIAAP//VbHB5gAAAAZJREFUAwBBJaTM8/UnSwAAAABJRU5ErkJggg==",
+      "created": 1781156639571,
+      "lastRetrieved": 1781156639571
+    }
+  }
+}

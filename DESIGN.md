@@ -28,7 +28,9 @@ Playful chunky font for the personality, quieter ones for the work:
 - Display: **Modak** — fat, blobby, pure piggy-bank energy. Display-only:
   its strokes nearly close up below ~24px, so it's for jar names, headings,
   and hero numbers — never body text. (Runners-up if it ever wears thin:
-  Chango, Chewy.)
+  Chango, Chewy. Font audition 2026-06: Gluten bold was "not that bad" —
+  round, bouncy baseline — but didn't quite match; rejected: Chango,
+  Chewy, Lilita One (too plain), Titan One (too static).)
 - Everything else (body, numbers, addresses, buttons): **Space Mono** —
   quirky enough to belong to the same playful world as the display font,
   but a real workhorse (bold, italics, clean-aligning digits).
@@ -55,9 +57,10 @@ playful name on top, honest typewriter numbers underneath.
 Chunky and physical, never floaty. No soft-blur shadows, no gentle scale.
 
 - Buttons are solid blocks: black outline (`border-2 border-black`) on a
-  hard, un-blurred offset shadow (`shadow-[4px_4px_0_0_#000]`).
-- Hover lifts the block (nudge up-left, shadow grows).
-- Press slams it flat into its own shadow (translate down-right by the shadow
+  hard, un-blurred shadow that drops straight down (`shadow-[0_4px_0_0_#000]`)
+  — not diagonal; blocks sit on the page like objects on a shelf.
+- Hover lifts the block (nudge straight up, shadow grows).
+- Press slams it flat into its own shadow (translate down by the shadow
   offset, shadow → none). Snappy (`duration-100`), not smooth.
 
 ## Principles
@@ -74,10 +77,26 @@ Chunky and physical, never floaty. No soft-blur shadows, no gentle scale.
 - Phone-ish centered column (`max-w-lg`), jars as square cards, actions in
   small modals.
 - Accent color `#DE006F`.
+- Palette is neutrals-first: greys, black, white do all the structure; cherry
+  is the only color and stays loud because nothing competes with it.
+- Maybe later: one small secondary (cyan-ish) for little elements only —
+  not now.
 - Light + dark themes (later).
 - Two-font system: **Modak** (display) + **Space Mono** (everything else).
+- Jar cards ARE the jar: progress fills the card's background from the
+  bottom (translucent cherry "jam" + solid cherry surface line), rounded
+  bottom corners for the jar-body silhouette. Exact `balance / goal` numbers
+  stay at the card's bottom so an empty jar still reads.
+- Chains on cards: monochrome glyph in a small black-outlined white circle
+  (a "coin"), not full-color brand logos. Full chain name appears inside
+  the jar modal (and as the chip's tooltip). Sepolia = hollow eth diamond.
+- Background: "chunky poster" (berachain-style reference) — warm off-white
+  paper with giant tone-on-tone display words ("save", "sweet", "jam")
+  cropped off the viewport edges, and small flat sticker doodles sitting
+  on the letters: gray coin, cherry pair, tiny jar — all with chunky black
+  outlines. Plus a faint grain overlay across the whole app.
+  Tried and rejected: halftone dots + giant ghost "jar" outline text
+  (aggressive watermark); blurry cherry blobs (represented nothing);
+  layered jam waves (just waves, single-color, didn't say "jar").
 
 ## Open questions
-
-- How literal do jar visuals get — fill level as the card's main visual?
-  (Parked for now — do the basic design first, revisit after.)

@@ -68,15 +68,22 @@ export default createConfig({
     },
   },
   // Periodic balance true-up: deposits are tracked exactly via Jar:Deposit,
-  // but direct ERC20 sends (gifts) bypass deposit() — so every ~minute we
+  // but direct ERC20 sends (gifts) bypass deposit() — so periodically we
   // read balanceOf(jar) on-chain and overwrite the stored balance. Indexing
   // the token's Transfer events instead would mean syncing EVERY transfer of
   // the token (unusable with e.g. mainnet USDC); this scales with jar count.
   blocks: {
     BalanceCheck: {
       chain: {
-        // ~12s blocks → interval 5 ≈ one check per minute.
-        sepolia: { interval: 5, startBlock: FACTORY.sepolia.startBlock },
+        // Gifts are rare, so ~5 min lag is fine and keeps RPC load low.
+        // interval is in BLOCKS: sepolia/mainnet ~12s → 25 ≈ 5 min. When
+        // enabling faster chains, tune per chain (Base/OP ~2s → 150).
+        //
+        // "latest" = the tip at startup: a true-up only matters at the tip,
+        // so historical runs are skipped entirely — replaying them is just
+        // wasted balanceOf multicalls that each overwrite the last (exact
+        // balances come from Deposit/Withdraw events regardless).
+        sepolia: { interval: 25, startBlock: "latest" },
       },
     },
   },

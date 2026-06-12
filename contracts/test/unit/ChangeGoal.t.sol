@@ -51,4 +51,14 @@ contract ChangeGoalTest is Base {
         vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, alice));
         jar.changeGoal(NEW_GOAL);
     }
+
+    /// @dev A CLOSED jar is done — its goal is frozen along with deposits.
+    function test_revertIf_changeGoalAfterClose() public {
+        vm.startPrank(owner);
+        jar.withdrawAll();
+
+        vm.expectRevert(Jar.JarIsClosed.selector);
+        jar.changeGoal(NEW_GOAL);
+        vm.stopPrank();
+    }
 }

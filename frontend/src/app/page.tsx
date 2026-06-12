@@ -1,11 +1,7 @@
 "use client";
 
 import { desc, eq } from "@ponder/client";
-import {
-  useAccountModal,
-  useChainModal,
-  useConnectModal,
-} from "@rainbow-me/rainbowkit";
+import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { usePonderQuery } from "@ponder/react";
 import { useEffect, useState } from "react";
 import { zeroAddress } from "viem";
@@ -15,19 +11,18 @@ import CreateJarModal from "@/components/CreateJarModal";
 import JarCard from "@/components/JarCard";
 import JarModal from "@/components/JarModal";
 import { schema } from "@/lib/ponder";
-import { config } from "@/wagmi";
 
 function shortAddress(address: string) {
   return `${address.slice(0, 5)}....${address.slice(-3)}`;
 }
 
-export default function Home() {
-  const { isConnected, address, chainId } = useAccount();
-  const { openAccountModal } = useAccountModal();
-  const { openChainModal } = useChainModal();
-  const { openConnectModal } = useConnectModal();
+// Jars are paged in to keep the grid manageable; "show more" reveals a batch.
+const PAGE_SIZE = 4;
 
-  const chain = config.chains.find((c) => c.id === chainId);
+export default function Home() {
+  const { isConnected, address } = useAccount();
+  const { openAccountModal } = useAccountModal();
+  const { openConnectModal } = useConnectModal();
 
   // Wallet state is client-only; render the disconnected layout on the
   // server pass to avoid a hydration mismatch.
@@ -36,6 +31,7 @@ export default function Home() {
 
   const [createOpen, setCreateOpen] = useState(false);
   const [showClosed, setShowClosed] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   // Track the selected jar by key and derive the row from the live query, so
   // the open modal sees balance/goal updates instead of a stale snapshot.
@@ -57,17 +53,27 @@ export default function Home() {
         )
         .orderBy(desc(schema.jar.createdAt)),
     enabled: address !== undefined,
+    // Live SSE updates are the primary mechanism, but the stream dies
+    // silently if the indexer restarts — poll as a fallback so an open
+    // tab always converges.
+    refetchInterval: 10_000,
   });
 
   const selectedJar =
     jars?.find((j) => `${j.chainId}-${j.address}` === selectedKey) ?? null;
 
-  // Closed jars are hidden behind a toggle so the grid stays focused on
-  // active ones; the toggle only appears once there's something to reveal.
+  // The grid shows one status at a time: active by default, ONLY closed ones
+  // while browsing the archive — never mixed. The toggle only appears once
+  // there's something to reveal.
   const closedCount = jars?.filter((j) => j.status === "CLOSED").length ?? 0;
-  const visibleJars = showClosed
-    ? jars
-    : jars?.filter((j) => j.status === "ACTIVE");
+  const activeCount = jars?.filter((j) => j.status === "ACTIVE").length ?? 0;
+  const visibleJars = jars?.filter(
+    (j) => j.status === (showClosed ? "CLOSED" : "ACTIVE"),
+  );
+  // Only the first `visibleCount` are rendered; the rest wait behind "show more".
+  const shownJars = visibleJars?.slice(0, visibleCount);
+  const hasMore =
+    visibleJars !== undefined && visibleJars.length > visibleCount;
 
   if (!mounted || !isConnected) {
     return (
@@ -77,7 +83,7 @@ export default function Home() {
           // undefined while RainbowKit isn't ready or its modal is open
           disabled={!openConnectModal}
           onClick={openConnectModal}
-          className="rounded-xl border-2 border-black bg-cherry px-8 py-3 font-bold text-white shadow-[0_4px_0_0_#333] transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-90 hover:shadow-[0_6px_0_0_#333] focus:outline-none focus-visible:-translate-y-0.5 focus-visible:shadow-[0_6px_0_0_#333] active:translate-y-1 active:shadow-[0_0_0_0_#333] disabled:opacity-50"
+          className="block-btn bg-cherry px-8 py-3 text-white"
         >
           connect wallet
         </button>
@@ -86,51 +92,89 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col">
-      <header className="p-4 text-center">
+    <main className="relative flex min-h-screen flex-col">
+      {/* Wallet is pinned to the top center of the viewport, out of the
+          content flow, so the header reads as just count + action. */}
+      <button
+        type="button"
+        onClick={openAccountModal}
+        className="fixed top-3 left-1/2 -translate-x-1/2 text-center text-sm text-neutral-500"
+      >
         connected wallet:
         <br />
-        <button type="button" onClick={openAccountModal}>
-          {address && shortAddress(address)}
-        </button>
-        <br />
-        chain:{" "}
-        <button type="button" onClick={openChainModal}>
-          {chain ? chain.name : "unsupported, switch"}
-        </button>
+        <span className="text-cherry">{address && shortAddress(address)}</span>
+      </button>
+      {/* pt clears the fixed wallet button's height — content starts below
+          the white strip the wallet occupies, never beside it. */}
+      <header className="px-8 pt-24 text-center">
+        {/* Primary action. Hidden while browsing the closed archive. */}
+        {jars && jars.length > 0 && !showClosed && (
+          <button
+            type="button"
+            onClick={() => setCreateOpen(true)}
+            className="mt-1 text-xl text-cherry underline hover:opacity-70"
+          >
+            + new jar
+          </button>
+        )}
       </header>
       {jars && jars.length > 0 ? (
         <>
-          {closedCount > 0 && (
-            <div className="px-8 pt-4 text-center">
-              <button
-                type="button"
-                onClick={() => setShowClosed((s) => !s)}
-                className="underline"
-              >
-                {showClosed ? "hide closed jars" : `show closed jars (${closedCount})`}
-              </button>
-            </div>
-          )}
-          <section className="flex flex-1 flex-wrap content-start justify-center gap-4 p-8">
-            {visibleJars?.map((jar) => (
+          <section className="flex flex-wrap content-start justify-start gap-4 px-8 pt-8">
+            {shownJars?.map((jar) => (
               <JarCard
                 key={`${jar.chainId}-${jar.address}`}
                 jar={jar}
                 onClick={() => setSelectedKey(`${jar.chainId}-${jar.address}`)}
               />
             ))}
-            <button
-              type="button"
-              onClick={() => setCreateOpen(true)}
-              className="flex aspect-square w-40 items-center justify-center border border-dashed"
-            >
-              + new jar
-            </button>
           </section>
+          {/* Secondary controls sit below the grid so the top stays clean. */}
+          <div className="flex flex-col items-center gap-3 px-8 pb-8 pt-12">
+            {hasMore && (
+              <button
+                type="button"
+                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                className="text-sm font-normal text-neutral-500 underline hover:text-black"
+              >
+                show more ({visibleJars.length - visibleCount})
+              </button>
+            )}
+            {visibleCount > PAGE_SIZE && (
+              <button
+                type="button"
+                onClick={() => setVisibleCount(PAGE_SIZE)}
+                className="text-sm font-normal text-neutral-500 underline hover:text-black"
+              >
+                show less
+              </button>
+            )}
+          </div>
+          {/* Closed-jar toggle is pinned to the bottom (mt-auto) so it sits in
+              the same place regardless of how many jars are on screen. */}
+          {closedCount > 0 && (
+            <footer className="mt-auto flex justify-center p-8">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowClosed((s) => !s);
+                  // Paging restarts per view — a "show more" expansion in one
+                  // view shouldn't leak into the other.
+                  setVisibleCount(PAGE_SIZE);
+                }}
+                className="text-xs text-neutral-500 underline hover:text-black"
+              >
+                {showClosed
+                  ? "hide closed jars"
+                  : `show closed jars (${closedCount})`}
+              </button>
+            </footer>
+          )}
         </>
       ) : (
-        <section className="flex flex-1 items-center justify-center">
+        // pb-24 mirrors the header's pt-24 so the message centers in the
+        // viewport, not in the leftover space below the header.
+        <section className="flex flex-1 items-center justify-center pb-24">
           <p className="text-center">
             {jars === undefined ? (
               "loading jars…"

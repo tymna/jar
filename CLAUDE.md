@@ -22,5 +22,5 @@ pnpm workspace monorepo. See `README.md` for layout; `DESIGN.md` for product dec
 
 ## Workflow
 
-- Frontend code: read `frontend/AGENTS.md` first — the installed Next.js differs from training data; docs are in `node_modules/next/dist/docs/`.
+- Frontend code: heed `frontend/CLAUDE.md` — the installed Next.js differs from training data; docs are in `node_modules/next/dist/docs/`.
 - After contract changes that alter events/ABI, the indexer ABIs and frontend constants must be regenerated/redeployed together.

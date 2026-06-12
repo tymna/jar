@@ -5,6 +5,10 @@
   --color-cherry: #de006f;
   /* Everyday font; --font-space-mono comes from next/font in layout.tsx. */
   --font-mono: var(--font-space-mono), ui-monospace, monospace;
+  /* Display font (--font-modak from layout.tsx) — headings, jar names,
+     and block-btn labels. Use as `font-display`. (The old "illegible
+     below ~24px" rule was about Modak; Sniglet holds up at button size.) */
+  --font-display: var(--font-modak), system-ui, sans-serif;
 }
 
 @layer base {
@@ -16,5 +20,91 @@
   /* Tailwind v4 preflight resets buttons to cursor: default; undo that. */
   button:not(:disabled) {
     cursor: pointer;
+  }
+
+  /* Kill the browser's blue focus ring on click — it lingers on buttons
+     after tapping them. Keyboard users still get a cue: a cherry outline,
+     but only on :focus-visible (Tab focus, not pointer focus). */
+  button:focus {
+    outline: none;
+  }
+  button:focus-visible {
+    outline: 2px solid var(--color-cherry);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* The chunky block — DESIGN.md "Motion": solid border on a hard
+     straight-down shadow; hover lifts it up, press slams it flat into its
+     own shadow. Snappy, never floaty. */
+  /* Disabled stays fully opaque — half-transparency reads as broken, not
+     inactive. Each button sets its own solid grey disabled colors; here we
+     only kill the motion. */
+  /* Labels use the regular mono voice — bold is reserved for numbers. The
+     block shape carries the toy-like press; the chunky display font is
+     reserved for the background poster. */
+  .block-btn {
+    @apply rounded-full border-2 border-black font-mono transition-all duration-100 hover:-translate-y-0.5 focus-visible:-translate-y-0.5 focus-visible:outline-none active:translate-y-0.5 disabled:hover:translate-y-0;
+  }
+}
+
+/* ---------- Background — DESIGN.md "Background" ----------
+   A flat grey field with the giant chunky saving words in soft cherry — the
+   playful type and the accent colour ARE the whole background, cropped off
+   the viewport edges. A grain overlay sits fixed over the whole app (dialogs
+   live in the browser's top layer, so they stay crisp above it). */
+
+.jar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  /* The words bleed off the edges on purpose; don't let them scroll. */
+  overflow: hidden;
+  /* One flat, neutral grey — white cards pop against it and the cherry words
+     read clearly. */
+  background-color: #e7e7e7;
+}
+
+/* Giant chunky words in soft cherry — the type is the playfulness and the
+   accent in one. Tonal enough to sit behind the jars without fighting them. */
+.jar-word {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 15vw, 13rem);
+  line-height: 1;
+  color: #e79ec2;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.jar-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.05;
+  /* 160px grayscale noise tile; %23 is an escaped # for url(). */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Modals fade + rise in — a native <dialog> otherwise pops in instantly.
+   The scale-125 sizing uses Tailwind v4's `scale` property, so animating the
+   independent `opacity`/`translate` here doesn't disturb the 25% size. */
+dialog[open] {
+  animation: modal-in 0.2s ease-out;
+}
+dialog[open]::backdrop {
+  animation: backdrop-in 0.2s ease-out;
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
   }
 }
