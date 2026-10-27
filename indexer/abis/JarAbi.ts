@@ -216,7 +216,7 @@ export const JarAbi = [
   },
   {
     "type": "event",
-    "name": "Withdraw",
+    "name": "WithdrawAll",
     "inputs": [
       {
         "name": "to",
@@ -236,6 +236,11 @@ export const JarAbi = [
   {
     "type": "error",
     "name": "AmountMustBeGreaterThanZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "JarIsClosed",
     "inputs": []
   },
   {

@@ -11,7 +11,7 @@ export const jar = onchainTable(
     name: t.text().notNull(),
     token: t.hex().notNull(),
     goal: t.bigint().notNull(),
-    // running total: += Token.Transfer(to=jar).value, reset to 0 on Withdraw.
+    // running total: += Token.Transfer(to=jar).value, reset to 0 on WithdrawAll.
     balance: t.bigint().notNull().default(0n),
     status: t.text().notNull().default("ACTIVE"), // "ACTIVE" | "CLOSED"
     createdBlock: t.bigint().notNull(),
@@ -48,7 +48,7 @@ export const transaction = onchainTable(
     chainId: t.integer().notNull(),
     jar: t.hex().notNull(), // → jars (chainId, address)
     kind: t.text().notNull(), // "DEPOSIT" | "WITHDRAW"
-    actor: t.hex().notNull(), // Deposit.from / Withdraw.to
+    actor: t.hex().notNull(), // Deposit.from / WithdrawAll.to
     amount: t.bigint().notNull(),
     blockNumber: t.bigint().notNull(),
     timestamp: t.bigint().notNull(),

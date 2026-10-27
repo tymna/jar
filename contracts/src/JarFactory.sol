@@ -21,14 +21,14 @@ contract JarFactory is Ownable {
     constructor(address admin) Ownable(admin) {}
 
     // ---- FUNCTIONS ---- //
-    // admind
+    // admin
     function addAllowedToken(address token) external onlyOwner {
         s_allowedToken[token] = true;
 
         emit AllowedTokenAdded(token);
     }
 
-    // admind
+    // admin
     function removeAllowedToken(address token) external onlyOwner {
         s_allowedToken[token] = false;
 

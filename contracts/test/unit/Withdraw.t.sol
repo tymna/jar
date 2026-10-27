@@ -40,7 +40,7 @@ contract WithdrawTest is Base {
 
     function test_withdrawAll_emitsWithdraw() public {
         vm.expectEmit(true, false, false, true, address(jar));
-        emit Jar.Withdraw(owner, DEPOSIT_AMOUNT);
+        emit Jar.WithdrawAll(owner, DEPOSIT_AMOUNT);
 
         vm.prank(owner);
         jar.withdrawAll();

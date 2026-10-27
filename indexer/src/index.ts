@@ -110,11 +110,11 @@ ponder.on("BalanceCheck:block", async ({ event, context }) => {
   }
 });
 
-// ---- Jar:Withdraw -> append a tx row, empty + close the jar ----
+// ---- Jar:WithdrawAll -> append a tx row, empty + close the jar ----
 // withdrawAll() sweeps the FULL on-chain balance (incl. any direct transfers)
 // and closes the jar, so post-withdraw the jar holds 0 — set balance to 0n
 // rather than subtracting (which could underflow vs our deposit-only total).
-ponder.on("Jar:Withdraw", async ({ event, context }) => {
+ponder.on("Jar:WithdrawAll", async ({ event, context }) => {
   const chainId = context.chain.id;
   const jarAddress = event.log.address;
 

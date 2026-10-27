@@ -14,13 +14,13 @@ contract Jar is Ownable {
     error TokenAddressCannotBeZero();
     error JarIsClosed();
 
-    // ---- ENUMM ---- //
+    // ---- ENUMS ---- //
     enum JarStatus {
         ACTIVE,
         CLOSED
     }
 
-    // ---- STATE VARAIBLES ---- //
+    // ---- STATE VARIABLES ---- //
     JarStatus private s_status;
     string private s_name;
 
